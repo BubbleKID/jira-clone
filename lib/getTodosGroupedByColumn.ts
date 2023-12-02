@@ -1,7 +1,14 @@
 import { databases } from "@/appwrite"
+import Board from "@/components/Board";
 
 export const getTodosGroupedByColumn = async() => {
     const data =  await databases.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!)
+        process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!
+    );
+
+    const todos = data.documents;
+
+    
+    console.log(data);
 }

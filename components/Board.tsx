@@ -1,22 +1,29 @@
 'use client'
 
+import { useBoardStore } from '@/store/BoardStore';
 import React, { useEffect } from 'react'
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 function Board() {
+  const getBoard = useBoardStore((state) => state.getBoard);
+  
   useEffect(() => {
-    // get board
-  }, []);
+    getBoard();
+  }, [getBoard]);
+
+  const handleDragEnd = () => {
+
+  }
 
   return (
-    <DragDropContext>
-      <Draggable droppableId="board" direction="horizontal" type="column">
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="board" direction="horizontal" type="column">
         {(provided) => 
           <div>
             {/* Render all colmns */}
           </div>
         }
-      </Draggable>
+      </Droppable>
     </DragDropContext>
   )
 }
