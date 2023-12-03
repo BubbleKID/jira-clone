@@ -8,21 +8,21 @@ import Column from './Column';
 
 
 function Board() {
-  const [getBoard, board] = useBoardStore((state) => [
-    state.getBoard,
-    state.board
+  const [board, getBoard] = useBoardStore((state) => [
+    state.board,
+    state.getBoard
   ]);
 
   useEffect(() => {
     getBoard();
   }, [getBoard]);
 
-  const handleDragEnd = (result: DropResult) => {
-
+  const handleOnDragEnd = (result: DropResult) => {
+    debugger;
   }
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
       <Droppable droppableId="board" direction="horizontal" type="column">
         {(provided) => 
           <div 
