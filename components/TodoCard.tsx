@@ -28,12 +28,14 @@ function TodoCard({
       {...dragHandleProps}
       ref={innerRef}
     >
-      <div className="flex justify-bewteeen itmes-center p-5">
+      <div className="flex justify-between itmes-center p-5">
         <p>{todo.title}</p>
         <button className="text-red-600 hover:text-red-600">
           <XCircleIcon className="ml-5 h-8 w-8" />
         </button>
       </div>
+
+      {/* Add image */}
     </div>
   )
 }
