@@ -3,7 +3,7 @@ import formatTodosForAI from "./formatTodosForAI";
 const fetchSuggestion = async (board: Board) => {
     const todos = formatTodosForAI(board);
     console.log('FORMATTED TODOS TO SEND', todos);
-    
+
     const res = await fetch("/api/generateSummary", {
         method: "POST",
         headers: {
@@ -13,9 +13,8 @@ const fetchSuggestion = async (board: Board) => {
     });
 
     const GPTdata = await res.json();
-    const { content } = GPTdata;
-
-    return content;
+    console.log('GPTdata', GPTdata)
+    return GPTdata;
 }
 
 export default fetchSuggestion;

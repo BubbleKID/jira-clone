@@ -23,6 +23,7 @@ function Header() {
     const fetchSuggestionFunc = async () => {
         const suggestion = await fetchSuggestion(board);
         setSuggestion(suggestion);
+        console.log('suggestion', suggestion)
         setLoading(false);
     }
 
