@@ -14,7 +14,7 @@ interface Todo extends Models.Document {
     $createAt: string;
     title: string;
     status: string;
-    image?: string;
+    image?: Image;
 }
 
 interface Image {
