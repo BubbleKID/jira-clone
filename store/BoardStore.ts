@@ -4,6 +4,8 @@ import { create } from 'zustand'
 
 interface BoardState {
     board: Board;
+    image: File | null;
+    setImage: (file: File | null) => void;
     getBoard: () => void;
     setBoardState: (board: Board) => void;
     updateTodoInDB: (todo: Todo, columnId: TypeColumn) => void;
@@ -20,6 +22,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   board: {
     columns: new Map<TypeColumn, Column>()
   },
+  image: null,
+  setImage: (image: File | null) => set({ image }),
   getBoard: async() => {
     const board = await getTodosGroupedByColumn();
     set({ board });
