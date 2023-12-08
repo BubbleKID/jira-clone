@@ -24,9 +24,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     const board = await getTodosGroupedByColumn();
     set({ board });
   },
-
   setBoardState: (board: Board) => set({board}),
-
   updateTodoInDB: async(todo, columnId) => {
     await databases.updateDocument(
       process.env.NEXT_PUBLIC_DATABASE_ID!,
@@ -38,11 +36,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
     );
   },
-
   searchString: "",
-
   setSearchString: (searchString) => set({ searchString }),
-
   deleteTask: async(taskIndex: number, todo: Todo, id: TypeColumn) => {
     const newColumns = new Map(get().board.columns);
 
@@ -60,13 +55,9 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       todo.$id
     )
   },
-
   newTaskInput: "",
-
   setNewTaskInput: (newTaskInput) => set({ newTaskInput }),
-
   newTaskType: "todo",
-
   setNewTaskType: (columnId: TypeColumn) => set({ newTaskType: columnId })
 
 }))
