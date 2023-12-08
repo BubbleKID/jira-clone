@@ -10,6 +10,8 @@ interface BoardState {
     searchString: string;
     setSearchString: (searchString: string) => void;
     deleteTask: (taskIndex: number, todoId: Todo, id: TypeColumn) => void;
+    newTaskInput: string;
+    setNewTaskInput: (newTaskInput: string) => void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
@@ -55,5 +57,10 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!,
       todo.$id
     )
-  }
+  },
+
+  newTaskInput: "",
+
+  setNewTaskInput: (newTaskInput) => set({ newTaskInput }),
+
 }))
