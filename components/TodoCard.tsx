@@ -48,7 +48,7 @@ function TodoCard({
       ref={innerRef}
     >
       <div className="flex justify-between itmes-center p-5">
-        <p>{todo.title}</p>
+        <p className="leading-8">{todo.title}</p>
         <button onClick={() => deleteTask(index, todo, id)} className="text-red-600 hover:text-red-600">
           <XCircleIcon className="ml-5 h-8 w-8" />
         </button>
