@@ -1,6 +1,8 @@
-import { databases, storage } from '@/appwrite';
+import { ID, databases, storage } from '@/appwrite';
 import { getTodosGroupedByColumn } from '@/lib/getTodosGroupedByColumn';
 import { create } from 'zustand'
+import Column from '../components/Column';
+import uploadImage from '@/lib/uploadImage';
 
 interface BoardState {
     board: Board;
@@ -13,6 +15,7 @@ interface BoardState {
     setSearchString: (searchString: string) => void;
     deleteTask: (taskIndex: number, todoId: Todo, id: TypeColumn) => void;
     newTaskInput: string;
+    addTask: (todo: string, columnId: TypeColumn, image?: File | null) => void;
     setNewTaskInput: (newTaskInput: string) => void;
     newTaskType: TypeColumn;
     setNewTaskType: (columnId: TypeColumn) => void;
@@ -62,6 +65,61 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   newTaskInput: "",
   setNewTaskInput: (newTaskInput) => set({ newTaskInput }),
   newTaskType: "todo",
-  setNewTaskType: (columnId: TypeColumn) => set({ newTaskType: columnId })
+  setNewTaskType: (columnId: TypeColumn) => set({ newTaskType: columnId }),
+  addTask: async (todo: string, columnId: TypeColumn, image?: File | null) => {
+    let file: Image | undefined;
+    
+    if (image) {
+      let fileUploaded = await uploadImage(image);
+      if (fileUploaded) {
+        file = {
+          bucketId: fileUploaded.bucketId,
+          fileId: fileUploaded.$id,
+        }
+      }
+    }
 
+    const { $id } = await databases.createDocument(
+      process.env.NEXT_PUBLIC_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!,
+      ID.unique(),
+      {
+        title: todo,
+        status: columnId,
+        ...(file && { image: JSON.stringify(file) })
+      }
+    );
+
+    set({ newTaskInput: ""});
+
+    set((state) => {
+      const newColumns = new Map(state.board.columns);
+
+      const newTodo: Todo = {
+        $id,
+        $createAt: new Date().toISOString(),
+        title: todo,
+        status: columnId,
+        ...(file && { image: file })
+      }
+    
+
+    const column = newColumns.get(columnId);
+    if (!column) {
+      newColumns.set(columnId, {
+        id: columnId,
+        todos: [newTodo],
+      });
+    } else {
+      newColumns.get(columnId)?.todos.push(newTodo);
+    }
+
+    return {
+      board: {
+        columns: newColumns
+      }
+    }
+  });
+
+  }
 }))

@@ -41,7 +41,7 @@ function TaskTypeRadioGroup() {
           }}
         >
           <div className="space-y-2">
-            {types.map(type => (
+            {types.map((type, index) => (
               <RadioGroup.Option
                 key={type.id}
                 value={type.id}

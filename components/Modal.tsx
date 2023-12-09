@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useRef } from 'react';
+import { FormEvent, Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react'
 import { useModalStore } from '@/store/ModalStore';
 import { useBoardStore } from '@/store/BoardStore';
@@ -9,11 +9,13 @@ import Image from 'next/image';
 import { PhotoIcon } from '@heroicons/react/20/solid';
 
 function Modal() {
-  const [image,  setImage, newTaskInput, setNewTaskInput] = useBoardStore((state) => [
+  const [addTask, image,  setImage, newTaskInput, setNewTaskInput, newTaskType] = useBoardStore((state) => [
+    state.addTask,
     state.image,
     state.setImage,
     state.newTaskInput,
     state.setNewTaskInput,
+    state.newTaskType,
   ]);
   const [isOpen, openModal, closeModal] = useModalStore((state) => [
     state.isOpen,
@@ -22,9 +24,31 @@ function Modal() {
   ]);
   const imagePickerRef = useRef<HTMLInputElement>(null);
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!newTaskInput) return;
+
+    addTask(newTaskInput, newTaskType, image);
+
+    setImage(null);
+    closeModal();
+  }
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="form" className="relative z-10" onClose={closeModal}>
+        <Dialog as="form" className="relative z-10" onClose={closeModal} onSubmit={handleSubmit}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
@@ -35,22 +59,6 @@ function Modal() {
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
-              >
-                <div className="fixed inset-0 bg-black bg-opacity-25" />
-              </Transition.Child>
-            </div>
-          </div>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                     <Dialog.Title
@@ -69,6 +77,7 @@ function Modal() {
                         className="w-full border border-gray-300 rounded-md outline-none p-5"
                       />
                     </div>
+
                     <TaskTypeRadioGroup />
 
                     <div>
